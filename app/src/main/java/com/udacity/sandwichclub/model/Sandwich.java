@@ -12,13 +12,13 @@ public class Sandwich {
     private String image;
     private List<String> ingredients = null;
 
+    public static final String NOT_AVAILABLE = "Not available";
+
     /**
      * No args constructor for use in serialization
      */
     public Sandwich() {
-        // Set non-null default values to minimize null value exceptions
-        mainName = placeOfOrigin = description = image = "";
-        alsoKnownAs = ingredients = new ArrayList<>();
+
     }
 
     public Sandwich(String mainName, List<String> alsoKnownAs, String placeOfOrigin, String description, String image, List<String> ingredients) {
@@ -31,6 +31,9 @@ public class Sandwich {
     }
 
     public String getMainName() {
+        if ((mainName == null) || (mainName.isEmpty())) {
+            mainName = NOT_AVAILABLE;
+        }
         return mainName;
     }
 
@@ -39,6 +42,9 @@ public class Sandwich {
     }
 
     public List<String> getAlsoKnownAs() {
+        if (alsoKnownAs == null) {
+            alsoKnownAs = new ArrayList<>();
+        }
         return alsoKnownAs;
     }
 
@@ -47,6 +53,9 @@ public class Sandwich {
     }
 
     public String getPlaceOfOrigin() {
+        if ((placeOfOrigin == null) || placeOfOrigin.isEmpty()) {
+            placeOfOrigin = NOT_AVAILABLE;
+        }
         return placeOfOrigin;
     }
 
@@ -55,6 +64,9 @@ public class Sandwich {
     }
 
     public String getDescription() {
+        if ((description ==null)||description.isEmpty()) {
+            description = NOT_AVAILABLE;
+        }
         return description;
     }
 
@@ -71,6 +83,9 @@ public class Sandwich {
     }
 
     public List<String> getIngredients() {
+        if (ingredients == null){
+            ingredients = new ArrayList<>();
+        }
         return ingredients;
     }
 

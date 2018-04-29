@@ -3,7 +3,6 @@ package com.udacity.sandwichclub;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -12,12 +11,26 @@ import com.squareup.picasso.Picasso;
 import com.udacity.sandwichclub.model.Sandwich;
 import com.udacity.sandwichclub.utils.JsonUtils;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 public class DetailActivity extends AppCompatActivity {
 
     public static final String EXTRA_POSITION = "extra_position";
     private static final int DEFAULT_POSITION = -1;
-    TextView alsoKnownAsTextView, originTextView, descriptionTextView, ingredientsTextView;
-    TextView alsoKnownAsLabel, originLabel, descriptionLabel, ingredientsLabel;
+
+    @BindView(R.id.also_known_tv)
+    TextView alsoKnownAsTextView;
+
+    @BindView(R.id.origin_tv)
+    TextView originTextView;
+
+    @BindView(R.id.description_tv)
+    TextView descriptionTextView;
+
+    @BindView(R.id.ingredients_tv)
+    TextView ingredientsTextView;
+
     Sandwich sandwich;
 
     @Override
@@ -26,14 +39,7 @@ public class DetailActivity extends AppCompatActivity {
         setContentView(R.layout.activity_detail);
 
         ImageView ingredientsIv = findViewById(R.id.image_iv);
-        alsoKnownAsTextView = findViewById(R.id.also_known_tv);
-        originTextView = findViewById(R.id.origin_tv);
-        descriptionTextView = findViewById(R.id.description_tv);
-        ingredientsTextView = findViewById(R.id.ingredients_tv);
-        alsoKnownAsLabel = findViewById(R.id.textView);
-        originLabel = findViewById(R.id.textView2);
-        ingredientsLabel = findViewById(R.id.textView3);
-        descriptionLabel = findViewById(R.id.textView4);
+        ButterKnife.bind(this);
 
         Intent intent = getIntent();
         if (intent == null) {
@@ -75,16 +81,11 @@ public class DetailActivity extends AppCompatActivity {
     }
 
     private void populateUI() {
-        // So this looks 'hacky' but it works, lol.
-        // I didn't want to show the textviews for empty fields (like when place of origin is not available)
-        // Setting visibility to GONE will mess up my RelativeLayout. Setting INVISIBLE will create awkward spaces
-        // So I decided to set height to 1dp
-
         if (sandwich == null) {
             closeOnError();
         }
 
-        if ((alsoKnownAsLabel != null) && (alsoKnownAsTextView != null)) {
+        if (alsoKnownAsTextView != null) {
             StringBuilder buffer = new StringBuilder();
             for (String name : sandwich.getAlsoKnownAs()) {
                 buffer.append(name + ", ");
@@ -96,24 +97,20 @@ public class DetailActivity extends AppCompatActivity {
                 otherNames = otherNames.substring(0, otherNames.lastIndexOf(','));
             }
             if (otherNames.isEmpty()) {
-                alsoKnownAsTextView.setHeight(1);
-                alsoKnownAsLabel.setHeight(1);
-            } else {
-                alsoKnownAsTextView.setText(otherNames);
+                otherNames = Sandwich.NOT_AVAILABLE;
             }
+            alsoKnownAsTextView.setText(otherNames);
         }
 
-        if ((originTextView != null) && (originLabel != null)) { // Set non-null default values
-            String origin = sandwich.getPlaceOfOrigin();
+        if (originTextView != null) {
+            String origin = sandwich.getPlaceOfOrigin().trim();
             if (origin.isEmpty()) {
-                originTextView.setHeight(1);
-                originLabel.setHeight(1);
-            } else {
-                originTextView.setText(origin);
+                origin = Sandwich.NOT_AVAILABLE;
             }
+            originTextView.setText(origin);
         }
 
-        if ((ingredientsTextView != null) && (ingredientsLabel != null)) {
+        if (ingredientsTextView != null) {
             StringBuilder buffer = new StringBuilder();
             for (String ingredient : sandwich.getIngredients()) {
                 buffer.append(ingredient + ", ");
@@ -125,21 +122,17 @@ public class DetailActivity extends AppCompatActivity {
                 ingredients = ingredients.substring(0, ingredients.lastIndexOf(','));
             }
             if (ingredients.isEmpty()) {
-                ingredientsLabel.setHeight(1);
-                ingredientsTextView.setHeight(1);
-            } else {
-                ingredientsTextView.setText(ingredients);
+                ingredients = Sandwich.NOT_AVAILABLE;
             }
+            ingredientsTextView.setText(ingredients);
         }
 
-        if ((descriptionTextView != null) && (descriptionLabel != null)) {
+        if (descriptionTextView != null) {
             String description = sandwich.getDescription();
             if (description.isEmpty()) {
-                descriptionLabel.setHeight(1);
-                descriptionTextView.setHeight(1);
-            } else {
-                descriptionTextView.setText(description);
+                description = Sandwich.NOT_AVAILABLE;
             }
+            descriptionTextView.setText(description);
         }
     }
 }

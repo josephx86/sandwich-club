@@ -12,27 +12,14 @@ import java.util.List;
 public class JsonUtils {
 
     public static Sandwich parseSandwichJson(String json) {
-        JSONObject jsonObject = null;
-
-        // Create an object to read from.
-        // This throw an error if JSON is invalid, so this will also be a valid-JSON check :)
         try {
-            jsonObject = new JSONObject(json);
-        } catch (JSONException e) {
-            return null;
-        }
+            // Create an object to read from.
+            // This throw an error if JSON is invalid, so this will also be a valid-JSON check :)
+            JSONObject jsonObject = new JSONObject(json);
 
-        // For some reason, if our object is null, we cannot proceed.
-        if (jsonObject == null) {
-            return null;
-        }
-
-        Sandwich sandwich = new Sandwich();
-        try {
             // Get the name
             JSONObject sandwichNameObject = jsonObject.getJSONObject("name");
             String mainName = sandwichNameObject.getString("mainName").trim();
-            sandwich.setMainName(mainName);
 
             // Get other names
             List<String> otherNames = new ArrayList<>();
@@ -45,15 +32,12 @@ public class JsonUtils {
                     }
                 }
             }
-            sandwich.setAlsoKnownAs(otherNames);
 
             // Get place of origin
             String origin = jsonObject.getString("placeOfOrigin").trim();
-            sandwich.setPlaceOfOrigin(origin);
 
             // Get description
             String description = jsonObject.getString("description").trim();
-            sandwich.setDescription(description);
 
             // Get the ingredients
             List<String> ingredients = new ArrayList<>();
@@ -66,14 +50,13 @@ public class JsonUtils {
                     }
                 }
             }
-            sandwich.setIngredients(ingredients);
 
             // Set the image url
             String imageUrl = jsonObject.getString("image");
-            sandwich.setImage(imageUrl);
+
+            return new Sandwich(mainName, otherNames, origin, description, imageUrl, ingredients);
         } catch (JSONException jex) {
             return null;
         }
-        return sandwich;
     }
 }
